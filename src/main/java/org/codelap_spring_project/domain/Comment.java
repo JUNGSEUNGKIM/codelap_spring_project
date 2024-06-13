@@ -1,5 +1,7 @@
 package org.codelap_spring_project.domain;
 
+import java.util.List;
+
 public class Comment {
 
     private String comment_id;
@@ -9,15 +11,27 @@ public class Comment {
     private String create_at;
     private String parent_comment_id;
 
+
+
+    private List<Comment> children;
+
     public Comment(){}
 
-    public Comment(String comment_id, String boarder_code, String content, String author, String create_at, String parent_comment_id) {
+    public Comment(List<Comment> children, String comment_id, String boarder_code, String content, String author, String create_at, String parent_comment_id) {
         this.comment_id = comment_id;
         this.boarder_code = boarder_code;
         this.content = content;
         this.author = author;
         this.create_at = create_at;
         this.parent_comment_id = parent_comment_id;
+        this.children = children;
+    }
+    public List<Comment> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Comment> children) {
+        this.children = children;
     }
 
     public String getComment_id() {

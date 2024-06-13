@@ -89,11 +89,33 @@ public class BoarderController {
         Map<String, Object> data = new HashMap<>();
         List<Boarder> boardResult = boarderMapper.detailBoard(id);
         List<Comment> commentResult = boarderMapper.detailBoardComment(id);
+        List<Comment> comments = new ArrayList<>();
+        Map<String, Comment> commentMap = new HashMap<>();
+
+        for (Comment row : commentResult) {
+
+             // 자식 댓글을 저장할 리스트
+            String parentId = row.getParent_comment_id(); // 부모 댓글의 id
+
+            if (parentId == null) {
+                // 부모 댓글이 null이면 바로 댓글 리스트에 추가
+                commentMap.put(row.getComment_id(),row);
+                comments.add(row);
+
+            } else {
+                List<Comment> childComment = new ArrayList<>();
+                // 부모 댓글이 있는 경우 부모 댓글을 찾아서 자식 댓글 리스트에 추가
+
+                childComment.add(row);
+                commentMap.get(parentId).setChildren(childComment);
+            }
+        }
+        System.out.println(comments);
 
 
 
         data.put("board",boardResult);
-        data.put("comments",commentResult);
+        data.put("comments",comments);
 
 
         return data;
