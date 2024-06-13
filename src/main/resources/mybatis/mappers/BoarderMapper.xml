@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.codelap_spring_project.repository.mybatis.BoarderMapper">
+
+    <resultMap id="boarderResultMap" type="org.codelap_spring_project.domain.Boarder">
+        <result property="boarder_code" column="boarder_code" />
+        <result property="user_id" column="user_id" />
+        <result property="title" column="title" />
+        <result property="created_at" column="created_at" />
+        <result property="content" column="content"  />
+        <result property="views" column="views" />
+        <result property="likes" column="likes" />
+        <result property="image_path" column="image_path" />
+        <result property="image_name" column="image_name" />
+        <result property="festival_code" column="festival_code" />
+    </resultMap>
+
+    <resultMap id="boarderMainResultMap" type="org.codelap_spring_project.domain.BoarderMain">
+        <result property="boarder_code" column="boarder_code" />
+        <result property="author" column="author" />
+        <result property="title" column="title" />
+        <result property="created_at" column="created_at" />
+        <result property="content" column="content"  />
+        <result property="views" column="views" />
+        <result property="likes" column="likes" />
+        <result property="image_name" column="image_name" />
+        <result property="comments_count" column="comments_count" />
+    </resultMap>
+
+
+
+    <select id="findAll" parameterType="map" resultMap="boarderMainResultMap">
+        SELECT
+            boarder_code, title, author, to_char(created_at, 'YYYY-MM-DD') as created_at, views, likes, content,image_name,
+            (SELECT COUNT(*) FROM boarder_comments c WHERE c.boarder_code = b.boarder_code) AS comments_count
+        FROM(
+                SELECT
+                    b.boarder_code, b.title, u.id AS author, b.created_at, b.views, b.likes, b.content,b.image_name,
+                    ROW_NUMBER() OVER (ORDER BY b.created_at DESC) AS rn
+                FROM boarder b
+                         JOIN USERS u ON b.user_id = u.id
+                WHERE 1=1) b
+        WHERE rn BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+
+
+
+
+    <select id="totalPage" >
+        select count(*) from boarder
+    </select>
+
+</mapper>
