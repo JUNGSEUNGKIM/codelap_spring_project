@@ -3,7 +3,7 @@ package org.codelap_spring_project.domain;
 public class Boarder {
 
     private String boarder_code;
-    private String user_id;
+    private String author;
     private String title;
     private String created_at;
     private String content;
@@ -11,12 +11,12 @@ public class Boarder {
     private String likes;
     private String image_path;
     private String image_name;
-    private String festival_code;
+    private String festivalname;
 
 
-    public Boarder(String boarder_code, String user_id, String title, String created_at, String content, String views, String likes, String image_path, String image_name, String festival_code) {
+    public Boarder(String boarder_code, String author, String title, String created_at, String content, String views, String likes, String image_path, String image_name, String festival_code) {
         this.boarder_code = boarder_code;
-        this.user_id = user_id;
+        this.author = author;
         this.title = title;
         this.created_at = created_at;
         this.content = content;
@@ -24,7 +24,7 @@ public class Boarder {
         this.likes = likes;
         this.image_path = image_path;
         this.image_name = image_name;
-        this.festival_code = festival_code;
+        this.festivalname = festival_code;
     }
 
     public Boarder() {
@@ -35,7 +35,7 @@ public class Boarder {
     }
 
     public String getUser_id() {
-        return user_id;
+        return author;
     }
 
     public String getTitle() {
@@ -67,7 +67,7 @@ public class Boarder {
     }
 
     public String getFestival_code() {
-        return festival_code;
+        return festivalname;
     }
 
     public void setBoarder_code(String boarder_code) {
@@ -75,7 +75,7 @@ public class Boarder {
     }
 
     public void setUser_id(String user_id) {
-        this.user_id = user_id;
+        this.author = user_id;
     }
 
     public void setTitle(String title) {
@@ -107,6 +107,6 @@ public class Boarder {
     }
 
     public void setFestival_code(String festival_code) {
-        this.festival_code = festival_code;
+        this.festivalname = festival_code;
     }
 }

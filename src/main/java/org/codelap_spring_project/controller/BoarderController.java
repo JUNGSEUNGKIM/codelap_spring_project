@@ -1,6 +1,8 @@
 package org.codelap_spring_project.controller;
 
+import org.codelap_spring_project.domain.Boarder;
 import org.codelap_spring_project.domain.BoarderMain;
+import org.codelap_spring_project.domain.Comment;
 import org.codelap_spring_project.repository.mybatis.BoarderMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,9 +80,23 @@ public class BoarderController {
     }
 
     @GetMapping("/svboarddetail/{id}")
-    public String addForm(@PathVariable String id) {
+    public Map<String,Object> detailBoard(@PathVariable String id) {
 
-        return "abc";
+        String board_code = "";
+        if(id != null){
+            board_code = id;
+        }
+        Map<String, Object> data = new HashMap<>();
+        List<Boarder> boardResult = boarderMapper.detailBoard(id);
+        List<Comment> commentResult = boarderMapper.detailBoardComment(id);
+
+
+
+        data.put("board",boardResult);
+        data.put("comments",commentResult);
+
+
+        return data;
     }
 
     @PostMapping("/add")

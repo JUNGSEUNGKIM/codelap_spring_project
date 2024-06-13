@@ -7,7 +7,7 @@
 
     <resultMap id="boarderResultMap" type="org.codelap_spring_project.domain.Boarder">
         <result property="boarder_code" column="boarder_code" />
-        <result property="user_id" column="user_id" />
+        <result property="author" column="author" />
         <result property="title" column="title" />
         <result property="created_at" column="created_at" />
         <result property="content" column="content"  />
@@ -15,7 +15,7 @@
         <result property="likes" column="likes" />
         <result property="image_path" column="image_path" />
         <result property="image_name" column="image_name" />
-        <result property="festival_code" column="festival_code" />
+        <result property="festivalname" column="festivalname" />
     </resultMap>
 
     <resultMap id="boarderMainResultMap" type="org.codelap_spring_project.domain.BoarderMain">
@@ -28,6 +28,16 @@
         <result property="likes" column="likes" />
         <result property="image_name" column="image_name" />
         <result property="comments_count" column="comments_count" />
+    </resultMap>
+
+    <resultMap id="commentResultMap" type="org.codelap_spring_project.domain.Comment">
+        <result property="comment_id" column="comment_id" />
+        <result property="boarder_code" column="boarder_code" />
+        <result property="content" column="content" />
+        <result property="author" column="author" />
+        <result property="create_at" column="create_at"  />
+        <result property="parent_comment_id" column="parent_comment_id" />
+
     </resultMap>
 
 
@@ -46,12 +56,26 @@
         WHERE rn BETWEEN #{startRow} AND #{endRow}
     </select>
 
-
-
-
-
     <select id="totalPage" >
         select count(*) from boarder
+    </select>
+
+
+    <select id="detailBoard" parameterType="String" resultMap="boarderResultMap">
+        SELECT b.boarder_code, b.title, u.id AS author, b.content, TO_CHAR(b.created_at, 'YYYY-MM-DD') AS created_at,
+               b.views, b.likes, b.image_path, b.image_name,f.festivalname
+        FROM BOARDER b
+                 JOIN USERS u ON b.user_id = u.id
+                 JOIN FESTIVALS f on b.festival_code = f.festivalid
+        WHERE b.boarder_code = #{id}
+    </select>
+
+    <select id="detailBoardComment" parameterType="String" resultMap="commentResultMap">
+        SELECT c.comment_id, c.boarder_code, c.content, u.id AS author, TO_CHAR(c.create_at, 'YYYY-MM-DD HH:MM') AS create_at, c.parent_comment_id
+        FROM boarder_comments c
+                 JOIN users u ON c.user_id = u.id
+        WHERE c.boarder_code = #{id}
+        ORDER BY c.comment_id
     </select>
 
 </mapper>
