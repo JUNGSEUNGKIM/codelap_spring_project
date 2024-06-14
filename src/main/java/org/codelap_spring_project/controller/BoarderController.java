@@ -1,8 +1,6 @@
 package org.codelap_spring_project.controller;
 
-import org.codelap_spring_project.domain.Boarder;
-import org.codelap_spring_project.domain.BoarderMain;
-import org.codelap_spring_project.domain.Comment;
+import org.codelap_spring_project.domain.*;
 import org.codelap_spring_project.repository.mybatis.BoarderMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3001",allowCredentials = "true",methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT})
@@ -24,10 +24,16 @@ public class BoarderController {
         this.boarderMapper = boarderMapper;
     }
 
-
-    @GetMapping(value={"/svboardmain?page","/svboardmain","svboardmain/"})
+    /**
+     * @name : register
+     * @date : 2024. 6. 14.
+     * @author : 김정승
+     * @description : 게시판의 main페이지의 내용을 요청한다.
+     */
+    @GetMapping(value={"/svboardmain?page","/svboardmain","svboardmain/","/svboardmain?user_id"})
     public Map<String, Object> list(Model model, @RequestParam(required = false, defaultValue ="1") String page,
                                     @RequestParam(required = false, defaultValue = "1") String user_id) {
+//        System.out.println("::::::::::::insert");
         int currentPage = 1;
         if(page != null) {
 //            System.out.println("::::::::::::insert" + page);
@@ -121,36 +127,94 @@ public class BoarderController {
         return data;
     }
 
-    @PostMapping("/add")
-    public String addItem(@Valid @ModelAttribute org.codelap_spring_project.domain.Boarder boarder, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "addForm";
+    @GetMapping("/svboarddelete/{id}")
+    public Map<String, Boolean> deleteBoard(@PathVariable String id) {
+        String postId = id;
+        boarderMapper.deleteBoardComment(id);
+
+        boolean result = boarderMapper.deleteBoard(id);
+        Map<String, Boolean> resultMe= new HashMap<>();
+        resultMe.put("result",result);
+        return resultMe;
+    }
+
+    @PostMapping("/svcreate" )
+    public String createBoard(@Valid @ModelAttribute BoaderInsert boarder) {
+//        boarder
+//        System.out.println(boarder.getTitle());
+//        System.out.println(boarder.getContent());
+//        System.out.println(boarder.getFestival_code());
+//        System.out.println(boarder.getUser_id());
+        String boarder_code = boarderMapper.getSequence();
+
+//        System.out.println("Sequence :::::::" + boarder_code);
+        boarder.setBoarder_code(boarder_code);
+        boarder.setImage_name("/");
+        boarder.setImage_path("/");
+//        System.out.println(boarder);
+
+        boarderMapper.createBoard(boarder);
+//        System.out.println(result);
+
+
+        return "OK";
+    }
+
+    @PostMapping("/svboardedit")
+    public Map<String, Boolean> editItem(@Valid @ModelAttribute BoaderInsert boarder) {
+        System.out.println(boarder.getBoarder_code());
+        System.out.println(boarder.getContent()+"::::"+ boarder.getTitle());
+
+        boolean result = boarderMapper.editBoarder(boarder);
+
+        Map<String, Boolean> resultMSG = new HashMap<>();
+        resultMSG.put("result", result);
+        return resultMSG;
+    }
+
+    @PostMapping("/svaddcomment")
+    public Map<String, Boolean> addcomment(@Valid @ModelAttribute CommentInsert comment) {
+        System.out.println(comment.getContent());
+        comment.setParent_comment_id("");
+        if(comment.getComment_id() != null) {
+            comment.setParent_comment_id(comment.getComment_id());
+            comment.setComment_id("");
         }
-        this.boarderMapper.save(boarder);
-        return "redirect:/items";
+
+        boolean result = boarderMapper.addcomment(comment);
+//        System.out.println(":::::::::"+result);
+        Map<String, Boolean> resultMSG = new HashMap<>();
+        resultMSG.put("result", result);
+
+
+        return resultMSG;
     }
 
-    @GetMapping("/{itemId}/edit")
-    public String editForm(@PathVariable Long itemId, Model model) {
-        org.codelap_spring_project.domain.Boarder boarder = this.boarderMapper.findById(itemId);
-        model.addAttribute("item", boarder);
-        return "editForm";
+    @PostMapping("/sveditcomment")
+    public Map<String, Boolean> editcomment(@Valid @ModelAttribute CommentInsert comment
+                                             ){
+//        System.out.println(comment.getComment_id());
+        boolean result = boarderMapper.editComment(comment);
+//        System.out.println(result);
+
+        Map<String, Boolean> resultMSG = new HashMap<>();
+        resultMSG.put("result", result);
+
+        return resultMSG;
     }
 
-    @PostMapping("/{itemId}/edit")
-    public String editItem(@PathVariable Long itemId, @Valid @ModelAttribute org.codelap_spring_project.domain.Boarder boarder, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "editForm";
-        }
-//        item.setId(itemId);
-        this.boarderMapper.update(boarder);
-        return "redirect:/items";
+    @PostMapping("/svdeletecomment/{comment_id}")
+    public Map<String, Boolean> deletecomment(@PathVariable String comment_id,
+                                              @RequestParam(required = false, defaultValue = "1") String boarder_code){
+//        System.out.println(comment_id);
+        boolean result = boarderMapper.deletecomment(comment_id);
+        System.out.println(result);
+
+        Map<String, Boolean> resultMSG = new HashMap<>();
+        resultMSG.put("result", result);
+
+        return resultMSG;
     }
 
-//    @GetMapping("/{itemId}")
-//    public String itemDetail(@PathVariable Long itemId, Model model) {
-//        Item item = itemMapper.findById(itemId);
-//        model.addAttribute("item", item);
-//        return "item";
-//    }
+
 }

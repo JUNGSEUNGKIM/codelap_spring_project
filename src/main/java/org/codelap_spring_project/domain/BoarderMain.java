@@ -1,5 +1,10 @@
 package org.codelap_spring_project.domain;
-
+/**
+ * @name : register
+ * @date : 2024. 6. 14.
+ * @author : 김정승
+ * @description : 게시판의 main페이지의 내용을 요청한다.
+ */
 public class BoarderMain {
     private String boarder_code;
     private String author;

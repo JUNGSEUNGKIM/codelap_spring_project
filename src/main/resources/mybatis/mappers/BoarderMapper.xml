@@ -78,4 +78,41 @@
         ORDER BY c.comment_id
     </select>
 
+    <delete id="deleteBoardComment" parameterType="String">
+        DELETE FROM boarder_comments WHERE boarder_code = #{id}
+    </delete>
+
+    <delete id="deleteBoard" parameterType="String">
+        DELETE FROM boarder WHERE boarder_code = #{id}
+    </delete>
+
+    <select id="getSequence" resultType="String">
+        SELECT BOARDER_CODE_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+
+    <insert id="createBoard" parameterType="org.codelap_spring_project.domain.BoaderInsert">
+        INSERT INTO BOARDER (boarder_code, user_id, title, content, image_path,
+                             image_name,festival_code  )
+        VALUES(#{boarder_code}, #{user_id}, #{title}, #{content}, #{image_path},
+                  #{image_name}, #{festival_code})
+    </insert>
+
+    <update id="editBoarder" parameterType="org.codelap_spring_project.domain.BoaderInsert">
+        UPDATE boarder SET title = #{title}, content = #{content} WHERE boarder_code = #{boarder_code}
+    </update>
+
+    <insert id="addcomment" parameterType="org.codelap_spring_project.domain.CommentInsert">
+        INSERT INTO BOARDER_COMMENTS (comment_id, boarder_code, user_id, content, parent_comment_id)
+        VALUES (comment_id_seq.nextval, #{boarder_code}, #{user_id}, #{content}, #{parent_comment_id})
+    </insert>
+
+    <update id="editComment" parameterType="org.codelap_spring_project.domain.CommentInsert">
+        UPDATE BOARDER_COMMENTS SET content = #{content} WHERE comment_id = #{comment_id}
+    </update>
+
+    <delete id="deletecomment" parameterType="String">
+        DELETE FROM boarder_comments WHERE comment_id = #{comment_id} OR parent_comment_id = #{comment_id}
+    </delete>
+
 </mapper>

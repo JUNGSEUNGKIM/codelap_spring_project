@@ -22,8 +22,10 @@
     </resultMap>
 
     <select id="findAllFestival" resultMap="festivalResultMap">
+        <![CDATA[
         SELECT *
-        FROM festivals
+        FROM festivals WHERE STARTDATE <= SYSDATE AND ENDDATE >= SYSDATE-14
+        ]]>
     </select>
 
     <select id="findAllFestivalth" resultMap="festivalResultMap">

@@ -4,22 +4,22 @@ public class Festival {
 
 
 
-    private Long festivalid;
+    private String festivalid;
     private String festivalname;
     private String location;
     private String startdate;
     private String enddate;
     private String description;
     private String website;
-    private String radaddress;
+    private String roadaddress;
     private String jibunaddress;
-    private Long latitude;
-    private Long longitude;
+    private String latitude;
+    private String longitude;
 
     public Festival() {
     }
 
-    public Festival(Long festivalid, String festivalname, String location, String startdate, String enddate, String description, String website, String radaddress, String jibunaddress, Long latitude, Long longitude) {
+    public Festival(String festivalid, String festivalname, String location, String startdate, String enddate, String description, String website, String roadaddress, String jibunaddress, String latitude, String longitude) {
         this.festivalid = festivalid;
         this.festivalname = festivalname;
         this.location = location;
@@ -27,14 +27,14 @@ public class Festival {
         this.enddate = enddate;
         this.description = description;
         this.website = website;
-        this.radaddress = radaddress;
+        this.roadaddress = roadaddress;
         this.jibunaddress = jibunaddress;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
 
-    public void setFestivalid(Long festivalid) {
+    public void setFestivalid(String festivalid) {
         this.festivalid = festivalid;
     }
 
@@ -62,25 +62,25 @@ public class Festival {
         this.website = website;
     }
 
-    public void setRadaddress(String radaddress) {
-        this.radaddress = radaddress;
+    public void setRoadaddress(String roadaddress) {
+        this.roadaddress = roadaddress;
     }
 
     public void setJibunaddress(String jibunaddress) {
         this.jibunaddress = jibunaddress;
     }
 
-    public void setLatitude(Long latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public void setLongitude(Long longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
 
 
-    public Long getFestivalid() {
+    public String getFestivalid() {
         return festivalid;
     }
 
@@ -108,19 +108,19 @@ public class Festival {
         return website;
     }
 
-    public String getRadaddress() {
-        return radaddress;
+    public String getRoadaddress() {
+        return roadaddress;
     }
 
     public String getJibunaddress() {
         return jibunaddress;
     }
 
-    public Long getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public Long getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
